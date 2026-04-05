@@ -398,6 +398,24 @@ def changes(
 
 
 # ---------------------------------------------------------------------------
+# GET /drugs
+# ---------------------------------------------------------------------------
+
+@app.get("/drugs")
+def list_drugs():
+    """Return unique drug names extracted from all saved policy files."""
+    drugs = set()
+    for json_file in DATA_DIR.glob("*.json"):
+        try:
+            data = json.loads(json_file.read_text())
+            if name := data.get("drug_name"):
+                drugs.add(name.strip().title())
+        except Exception:
+            continue
+    return sorted(drugs)
+
+
+# ---------------------------------------------------------------------------
 # GET /policies
 # ---------------------------------------------------------------------------
 

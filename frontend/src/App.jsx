@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
 import ReactMarkdown from 'react-markdown'
+import DrugAutocomplete from './components/DrugAutocomplete'
+
 import './App.css'
 
 const API = '/api'
@@ -71,7 +73,7 @@ function CompareTab() {
     { label: 'Step Therapy Drugs', key: 'step_therapy_drugs',   render: listOrString },
     { label: 'Indications',        key: 'covered_indications',  render: listOrString },
     { label: 'Site of Care',       key: 'site_of_care',         render: listOrString },
-    { label: 'Quantity Limits',    key: 'quantity_limits',      render: listOrString },
+    { label: 'Quantity Limits',    key: 'quantity_limits',      render: (v) => v ? <span style={{whiteSpace:'pre-wrap'}}>{v}</span> : <span className="muted">—</span> },
     { label: 'Notes',              key: 'notes',                render: listOrString },
     { label: 'Effective Date',     key: 'effective_date',       render: (v) => v || <span className="muted">—</span> },
   ]
@@ -84,12 +86,9 @@ function CompareTab() {
       </div>
 
       <form className="search-bar" onSubmit={handleSearch}>
-        <input
-          className="text-input"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Drug name (e.g. Bevacizumab)"
-        />
+        <div className="ac-wrapper">
+          <DrugAutocomplete value={input} onChange={setInput} placeholder="Drug name (e.g. Bevacizumab)" />
+        </div>
         <button className="btn btn-primary" type="submit" disabled={loading}>
           {loading ? 'Loading…' : 'Compare'}
         </button>
@@ -103,6 +102,27 @@ function CompareTab() {
             <span className="drug-badge">{drug}</span>
             <span className="muted">{payers.length} payer{payers.length !== 1 ? 's' : ''} loaded</span>
           </div>
+
+          {payers.length > 0 && (() => {
+            const priorAuth   = payers.filter((p) => p.prior_auth_required === true).length
+            const stepTherapy = payers.filter((p) => p.step_therapy_required === true).length
+            return (
+              <div className="stat-cards">
+                <div className="stat-card">
+                  <div className="stat-value">{payers.length}</div>
+                  <div className="stat-label">Payers Analyzed</div>
+                </div>
+                <div className="stat-card stat-card-warn">
+                  <div className="stat-value">{priorAuth}<span className="stat-denom">/{payers.length}</span></div>
+                  <div className="stat-label">Require Prior Auth</div>
+                </div>
+                <div className="stat-card stat-card-alert">
+                  <div className="stat-value">{stepTherapy}<span className="stat-denom">/{payers.length}</span></div>
+                  <div className="stat-label">Require Step Therapy</div>
+                </div>
+              </div>
+            )
+          })()}
 
           {payers.length === 0 ? (
             <div className="empty-state">
@@ -182,12 +202,7 @@ function AskTab() {
       <form className="ask-form" onSubmit={handleSubmit}>
         <div className="form-row">
           <label className="form-label">Drug Name</label>
-          <input
-            className="text-input"
-            value={drug}
-            onChange={(e) => setDrug(e.target.value)}
-            placeholder="e.g. Bevacizumab"
-          />
+          <DrugAutocomplete value={drug} onChange={setDrug} />
         </div>
         <div className="form-row">
           <label className="form-label">Your Question</label>
@@ -296,12 +311,7 @@ function UploadTab() {
       <form className="upload-form" onSubmit={handleSubmit}>
         <div className="form-row">
           <label className="form-label">Drug Name (optional hint)</label>
-          <input
-            className="text-input"
-            value={drugHint}
-            onChange={(e) => setDrugHint(e.target.value)}
-            placeholder="e.g. Bevacizumab — helps Claude focus on the right drug"
-          />
+          <DrugAutocomplete value={drugHint} onChange={setDrugHint} placeholder="e.g. Bevacizumab — helps Claude focus" />
         </div>
         <div className="form-row">
           <label className="form-label">Policy PDF</label>
