@@ -7,6 +7,18 @@ An AI tool that ingests insurance policy PDFs, extracts structured coverage data
 
 ---
 
+## To run
+
+### Terminal 1 — backend
+cd backend
+uvicorn main:app --reload --port 8000
+
+### Terminal 2 — frontend
+cd frontend
+npm install && npm run dev
+
+---
+
 ## Project structure
 
 ```

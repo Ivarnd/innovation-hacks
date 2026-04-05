@@ -22,7 +22,8 @@ app = FastAPI(title="AntonRx Policy Intelligence API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["http://localhost:5173", "http://localhost:3000", "http://127.0.0.1:5173"],
+    allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
@@ -416,6 +417,17 @@ def changes(
         "new_snapshot": matches[-1].name,
         "changes": diff,
     }
+
+
+# ---------------------------------------------------------------------------
+# GET /policies
+# ---------------------------------------------------------------------------
+
+@app.get("/policies")
+def list_policies():
+    """List all extracted policy JSON files in data/."""
+    files = sorted([f.name for f in DATA_DIR.glob("*.json")])
+    return {"files": files, "count": len(files)}
 
 
 # ---------------------------------------------------------------------------
