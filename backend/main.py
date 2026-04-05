@@ -1,10 +1,14 @@
 import base64
+import io
 import json
 import os
 import re
+import time
 from datetime import date
 from pathlib import Path
 from typing import Optional
+
+from pypdf import PdfReader, PdfWriter
 
 import anthropic
 from dotenv import load_dotenv
@@ -80,49 +84,107 @@ def parse_json_response(text: str) -> dict:
     return json.loads(text)
 
 
+CHUNK_SIZE = 20
+RATE_LIMIT_SLEEP = 65
+
+
+def chunk_pdf(pdf_bytes: bytes) -> list[bytes]:
+    """Split PDF into CHUNK_SIZE-page pieces. Returns list of PDF bytes."""
+    reader = PdfReader(io.BytesIO(pdf_bytes))
+    total_pages = len(reader.pages)
+
+    if total_pages <= CHUNK_SIZE:
+        return [pdf_bytes]
+
+    chunks = []
+    for start in range(0, total_pages, CHUNK_SIZE):
+        writer = PdfWriter()
+        for page_num in range(start, min(start + CHUNK_SIZE, total_pages)):
+            writer.add_page(reader.pages[page_num])
+        buf = io.BytesIO()
+        writer.write(buf)
+        chunks.append(buf.getvalue())
+    return chunks
+
+
+def call_claude_extract(pdf_bytes: bytes, drug_hint: str = None) -> dict:
+    """Send one PDF chunk to Claude for extraction."""
+    b64_pdf = base64.standard_b64encode(pdf_bytes).decode("utf-8")
+    instruction = (
+        f"Extract coverage information for {drug_hint} from this policy document as instructed. Focus only on {drug_hint}."
+        if drug_hint
+        else "Extract all coverage information from this policy document as instructed."
+    )
+
+    response = client.messages.create(
+        model=MODEL,
+        max_tokens=4096,
+        system=EXTRACTION_SYSTEM_PROMPT,
+        messages=[{
+            "role": "user",
+            "content": [
+                {
+                    "type": "document",
+                    "source": {"type": "base64", "media_type": "application/pdf", "data": b64_pdf},
+                },
+                {"type": "text", "text": instruction},
+            ],
+        }],
+    )
+
+    raw_text = next(b.text for b in response.content if b.type == "text")
+    return parse_json_response(raw_text)
+
+
+def merge_chunk_results(results: list[dict]) -> dict:
+    """Merge extraction results from multiple chunks into one policy object."""
+    if len(results) == 1:
+        return results[0]
+
+    array_fields = {"step_therapy_drugs", "covered_indications"}
+    merged = {}
+    all_keys = {k for r in results for k in r}
+
+    for key in all_keys:
+        if key in array_fields:
+            seen = []
+            for r in results:
+                for item in (r.get(key) or []):
+                    if item not in seen:
+                        seen.append(item)
+            merged[key] = seen
+        else:
+            merged[key] = next(
+                (r[key] for r in results if r.get(key) not in (None, "", "unknown")),
+                results[0].get(key),
+            )
+    return merged
+
+
 # ---------------------------------------------------------------------------
 # POST /extract
 # ---------------------------------------------------------------------------
 
 @app.post("/extract")
-async def extract(file: UploadFile = File(...)):
-    """Upload a policy PDF, extract structured JSON, and save to data/."""
+async def extract(file: UploadFile = File(...), drug_hint: Optional[str] = None):
+    """Upload a policy PDF, extract structured JSON with chunking, and save to data/."""
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Only PDF files are supported.")
 
     pdf_bytes = await file.read()
-    b64_pdf = base64.standard_b64encode(pdf_bytes).decode("utf-8")
+    chunks = chunk_pdf(pdf_bytes)
 
-    response = client.messages.create(
-        model=MODEL,
-        max_tokens=2048,
-        system=EXTRACTION_SYSTEM_PROMPT,
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "document",
-                        "source": {
-                            "type": "base64",
-                            "media_type": "application/pdf",
-                            "data": b64_pdf,
-                        },
-                    },
-                    {
-                        "type": "text",
-                        "text": "Extract all coverage information from this policy document as instructed.",
-                    },
-                ],
-            }
-        ],
-    )
+    results = []
+    for i, chunk in enumerate(chunks):
+        if i > 0:
+            time.sleep(RATE_LIMIT_SLEEP)
+        try:
+            result = call_claude_extract(chunk, drug_hint=drug_hint)
+            results.append(result)
+        except json.JSONDecodeError as e:
+            raise HTTPException(status_code=502, detail=f"Claude returned invalid JSON on chunk {i+1}: {e}")
 
-    raw_text = next(b.text for b in response.content if b.type == "text")
-    try:
-        policy = parse_json_response(raw_text)
-    except json.JSONDecodeError as e:
-        raise HTTPException(status_code=502, detail=f"Claude returned invalid JSON: {e}\n{raw_text[:300]}")
+    policy = merge_chunk_results(results)
 
     payer_slug = slugify(policy.get("payer", "unknown"))
     drug_slug = slugify(policy.get("drug_name", "unknown"))
@@ -132,7 +194,7 @@ async def extract(file: UploadFile = File(...)):
     output_path = DATA_DIR / filename
     output_path.write_text(json.dumps(policy, indent=2))
 
-    return {"filename": filename, "policy": policy}
+    return {"filename": filename, "chunks_processed": len(chunks), "policy": policy}
 
 
 # ---------------------------------------------------------------------------
