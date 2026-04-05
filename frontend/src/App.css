@@ -83,15 +83,11 @@ input, textarea { font: inherit; }
   box-shadow: var(--shadow-sm);
 }
 
-.header-logo {
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.5px;
-  line-height: 1;
-  font-family: 'Barlow Condensed', 'Barlow', system-ui, sans-serif;
+.header-logo-img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
-.logo-anton { color: var(--text); }
-.logo-rx    { color: var(--blue); }
 
 .header-tagline {
   color: var(--muted);
@@ -339,6 +335,38 @@ input, textarea { font: inherit; }
 .answer-icon { font-size: 24px; flex-shrink: 0; }
 .answer-body { display: flex; flex-direction: column; gap: 12px; }
 .answer-text { font-size: 15px; line-height: 1.7; color: var(--text); }
+
+/* Markdown rendered inside answer card */
+.answer-text h1, .answer-text h2, .answer-text h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 12px 0 4px;
+}
+.answer-text h1:first-child,
+.answer-text h2:first-child,
+.answer-text h3:first-child { margin-top: 0; }
+.answer-text p   { margin: 0 0 8px; }
+.answer-text p:last-child { margin-bottom: 0; }
+.answer-text strong { font-weight: 700; color: var(--text); }
+.answer-text em     { font-style: italic; }
+.answer-text ul, .answer-text ol {
+  padding-left: 18px;
+  margin: 4px 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.answer-text ul { list-style: disc; }
+.answer-text ol { list-style: decimal; }
+.answer-text li { font-size: 14px; color: var(--text2); line-height: 1.5; }
+.answer-text code {
+  background: var(--surface3);
+  border-radius: 3px;
+  padding: 1px 5px;
+  font-size: 13px;
+  font-family: ui-monospace, Consolas, monospace;
+}
 .sources {
   display: flex;
   flex-wrap: wrap;

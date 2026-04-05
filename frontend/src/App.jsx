@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react'
 import axios from 'axios'
+import ReactMarkdown from 'react-markdown'
 import './App.css'
 
 const API = '/api'
@@ -219,14 +220,15 @@ function AskTab() {
         <div className="answer-card">
           <div className="answer-icon">💬</div>
           <div className="answer-body">
-            <p className="answer-text">{result.answer}</p>
+            <div className="answer-text">
+              <ReactMarkdown>{result.answer}</ReactMarkdown>
+            </div>
             {result.sources?.length > 0 && (
               <div className="sources">
                 <span className="sources-label">Sources:</span>
                 {result.sources.map((s, i) => (
-                  // Backend returns { payer, policy_date }
                   <span key={i} className="source-chip">
-                    {s.payer}{s.policy_date ? ` · ${s.policy_date}` : ''}
+                    📋 {s.payer}{s.policy_date ? ` · ${s.policy_date}` : ''}
                   </span>
                 ))}
               </div>
@@ -421,9 +423,7 @@ export default function App() {
   return (
     <div className="app-shell">
       <header className="app-header">
-        <div className="header-logo">
-          <span className="logo-anton">ANTON</span><span className="logo-rx">Rx</span>
-        </div>
+        <img src="/logo.png" alt="AntonRx" className="header-logo-img" />
         <p className="header-tagline">Medical Benefit Drug Policy Tracker</p>
       </header>
 
