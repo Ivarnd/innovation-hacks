@@ -44,7 +44,7 @@ Return ONLY a valid JSON object with these exact fields:
 - step_therapy_drugs (array of strings): drugs that must be tried first, or []
 - covered_indications (array of strings): approved diagnoses/conditions
 - site_of_care (string): where drug must be administered, or null
-- quantity_limits (string): dosing/quantity restrictions, or null
+- quantity_limits (array of strings): each dosing/quantity restriction as a separate item, or []
 - notes (string): any other important coverage details, or null
 
 Do not include any text outside the JSON object. No markdown, no preamble."""

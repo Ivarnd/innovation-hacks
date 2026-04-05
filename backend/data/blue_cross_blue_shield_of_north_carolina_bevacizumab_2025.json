@@ -31,7 +31,18 @@
   "payer": "Blue Cross Blue Shield of North Carolina",
   "notes": "Avastin (bevacizumab) is a preferred, restricted product under the Preferred Injectable Oncology Program. Authorization for Avastin requires documented serious adverse events to both preferred biosimilars plus FDA MedWatch Adverse Event Reporting Form submission. Limitation of use: not for adjuvant treatment of colon cancer. Off-label oncology use may be considered if supported by FDA label with established clinical benefit or NCCN Category 1 or 2A recommendation. Continuation criteria require continued clinical benefit, acceptable toxicity, and re-verification of adverse event documentation to preferred biosimilars.",
   "prior_auth_required": true,
-  "quantity_limits": "HCPCS J9035, maximum units 9999. Dosing: Metastatic colorectal cancer: 5 mg/kg every 2 weeks with bolus-IFL; 10 mg/kg every 2 weeks with FOLFOX4; 5 mg/kg every 2 weeks or 7.5 mg/kg every 3 weeks with fluoropyrimidine-irinotecan- or fluoropyrimidine-oxaliplatin-based chemotherapy after progression. First-line NSCLC: 15 mg/kg every 3 weeks with carboplatin and paclitaxel. Recurrent glioblastoma: 10 mg/kg every 2 weeks. Metastatic RCC: 10 mg/kg every 2 weeks with interferon alfa. Cervical cancer: 15 mg/kg every 3 weeks with paclitaxel and cisplatin or paclitaxel and topotecan. Stage III/IV ovarian cancer post-surgical resection: 15 mg/kg every 3 weeks with carboplatin and paclitaxel for up to 6 cycles, then 15 mg/kg every 3 weeks as single agent, total up to 22 cycles. Platinum-resistant recurrent ovarian cancer: 10 mg/kg every 2 weeks with paclitaxel, pegylated liposomal doxorubicin, or weekly topotecan; or 15 mg/kg every 3 weeks with topotecan every 3 weeks. Platinum-sensitive recurrent ovarian cancer: 15 mg/kg every 3 weeks with carboplatin/paclitaxel for 6-8 cycles then single agent, or 15 mg/kg every 3 weeks with carboplatin/gemcitabine for 6-10 cycles then single agent. HCC: 15 mg/kg every 3 weeks following 1,200 mg atezolizumab.",
+  "quantity_limits": [
+    "HCPCS J9035, maximum units 9999.",
+    "Metastatic colorectal cancer: 5 mg/kg every 2 weeks with bolus-IFL; 10 mg/kg every 2 weeks with FOLFOX4; 5 mg/kg every 2 weeks or 7.5 mg/kg every 3 weeks with fluoropyrimidine-irinotecan- or fluoropyrimidine-oxaliplatin-based chemotherapy after progression.",
+    "First-line NSCLC: 15 mg/kg every 3 weeks with carboplatin and paclitaxel.",
+    "Recurrent glioblastoma: 10 mg/kg every 2 weeks.",
+    "Metastatic RCC: 10 mg/kg every 2 weeks with interferon alfa.",
+    "Cervical cancer: 15 mg/kg every 3 weeks with paclitaxel and cisplatin or paclitaxel and topotecan.",
+    "Stage III/IV ovarian cancer post-surgical resection: 15 mg/kg every 3 weeks with carboplatin and paclitaxel for up to 6 cycles, then 15 mg/kg every 3 weeks as single agent, total up to 22 cycles.",
+    "Platinum-resistant recurrent ovarian cancer: 10 mg/kg every 2 weeks with paclitaxel, pegylated liposomal doxorubicin, or weekly topotecan; or 15 mg/kg every 3 weeks with topotecan every 3 weeks.",
+    "Platinum-sensitive recurrent ovarian cancer: 15 mg/kg every 3 weeks with carboplatin/paclitaxel for 6-8 cycles then single agent, or 15 mg/kg every 3 weeks with carboplatin/gemcitabine for 6-10 cycles then single agent.",
+    "HCC: 15 mg/kg every 3 weeks following 1,200 mg atezolizumab."
+  ],
   "brand_name": "Avastin",
   "preferred_status": "preferred"
 }

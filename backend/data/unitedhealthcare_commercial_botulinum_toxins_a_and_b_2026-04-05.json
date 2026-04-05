@@ -40,7 +40,11 @@
   "payer": "UnitedHealthcare Commercial",
   "notes": "Daxxify (daxibotulinumtoxinA-lanm) is typically excluded from coverage; coverage reviews may be in place if required by law or the benefit plan. Refer to Medical Benefit Drug Policy titled Medical Benefit Therapeutic Equivalent Medications - Excluded Drugs. Botulinum toxins are considered cosmetic when used to improve appearance or in absence of physiological functional impairment; most COCs and SPDs exclude cosmetic services. Many benefit documents also explicitly exclude treatment of hyperhidrosis; member-specific benefit plan document must be reviewed. Unproven indications (not covered) include: acquired nystagmus, anismus, benign prostatic hyperplasia, brachial plexus palsy, chronic daily headache, chronic low back pain, chronic prostatic pain, cricopharyngeal dysphagia (excluding achalasia), epiphora following salivary gland transplantation, esophageal spasm, gastroparesis, gustatory epiphora, lateral epicondylitis, lichen simplex, lower urinary tract dysfunction, motor tics, myofascial pain syndrome, nasal hypersecretion, pain/wound healing after hemorrhoidectomy, pancreas divisum, piriformis syndrome, post-parotidectomy sialoceles, post-thoracotomy pseudoangina, proctalgia fugax, severe bruxism, severe paradoxical vocal cord movement, sphincter of Oddi dysfunction, temporomandibular disorders, tension-type headache, thyroid associated ophthalmopathy, Tourette's syndrome, traumatic sixth nerve palsy, trigeminal neuralgia, trismus and stridor in ALS. Chronic migraine is unproven for Daxxify, Dysport, Myobloc, and Xeomin. Policy Number: 2026D0017AN.",
   "prior_auth_required": true,
-  "quantity_limits": "Botulinum toxin administration no more frequent than every 12 weeks, regardless of diagnosis. Dosing must be per FDA approved labeling or supported by published clinical evidence. Initial and reauthorization periods are no more than 12 months each for Myobloc indications.",
+  "quantity_limits": [
+    "Botulinum toxin administration no more frequent than every 12 weeks, regardless of diagnosis.",
+    "Dosing must be per FDA approved labeling or supported by published clinical evidence.",
+    "Initial and reauthorization periods are no more than 12 months each for Myobloc indications."
+  ],
   "brand_name": "Dysport, Daxxify, Xeomin, Botox, Myobloc",
   "preferred_status": "non-preferred"
 }
