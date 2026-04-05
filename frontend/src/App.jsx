@@ -34,8 +34,8 @@ const preferredBadge = (v) => {
 
 // ── COMPARE TAB ─────────────────────────────────────────────────────────────
 function CompareTab() {
-  const [input, setInput]  = useState('Bevacizumab')
-  const [drug, setDrug]    = useState('Bevacizumab')
+  const [input, setInput]  = useState('')
+  const [drug, setDrug]    = useState('')
   const [payers, setPayers] = useState(null)
   const [loading, setLoad] = useState(false)
   const [error, setError]  = useState(null)
@@ -52,8 +52,6 @@ function CompareTab() {
       setLoad(false)
     }
   }, [])
-
-  useEffect(() => { fetchCompare('Bevacizumab') }, [fetchCompare])
 
   const handleSearch = (e) => {
     e.preventDefault()
@@ -152,7 +150,7 @@ const SAMPLE_QUESTIONS = [
 ]
 
 function AskTab() {
-  const [drug, setDrug]         = useState('Bevacizumab')
+  const [drug, setDrug]         = useState('')
   const [question, setQuestion] = useState('')
   const [result, setResult]     = useState(null)
   const [loading, setLoad]      = useState(false)
