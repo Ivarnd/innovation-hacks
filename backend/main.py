@@ -141,9 +141,12 @@ async def extract(file: UploadFile = File(...)):
 
 @app.get("/compare")
 def compare(drug: str = Query(..., description="Drug name to compare across payers")):
-    """Return all extracted policies matching the given drug name."""
+    """Return the latest policy per payer matching the given drug name."""
     drug_lower = drug.lower()
-    results = []
+
+    # Collect all matching files, keep only the latest per payer (files are
+    # named {payer}_{drug}_{date}.json so lexicographic sort = date sort)
+    latest: dict[str, tuple] = {}  # payer_slug -> (json_file, data)
 
     for json_file in sorted(DATA_DIR.glob("*.json")):
         try:
@@ -155,6 +158,12 @@ def compare(drug: str = Query(..., description="Drug name to compare across paye
            drug_lower not in (data.get("brand_name") or "").lower():
             continue
 
+        payer_key = slugify(data.get("payer", json_file.stem))
+        # sorted() gives ascending order so each iteration replaces with a newer file
+        latest[payer_key] = (json_file, data)
+
+    results = []
+    for json_file, data in latest.values():
         results.append({
             "payer": data.get("payer"),
             "drug_name": data.get("drug_name"),
@@ -273,7 +282,7 @@ def ask(body: AskRequest):
 
 
 # ---------------------------------------------------------------------------
-# GET /changes  (Phase 2 — bonus)
+# GET /changes  (Phase 2)
 # ---------------------------------------------------------------------------
 
 DIFF_PROMPT = """You are comparing two versions of the same insurance policy.
