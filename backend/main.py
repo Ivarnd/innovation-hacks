@@ -195,7 +195,7 @@ async def extract(file: UploadFile = File(...), drug_hint: Optional[str] = None)
     output_path = DATA_DIR / filename
     output_path.write_text(json.dumps(policy, indent=2))
 
-    return {"filename": filename, "chunks_processed": len(chunks), "policy": policy}
+    return policy
 
 
 # ---------------------------------------------------------------------------
