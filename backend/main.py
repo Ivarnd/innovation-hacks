@@ -8,12 +8,14 @@ from datetime import date
 from pathlib import Path
 from typing import Optional
 
+import httpx
 from pypdf import PdfReader, PdfWriter
 
 import anthropic
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, Query, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 
 load_dotenv()
@@ -33,6 +35,10 @@ PDFS_DIR = Path(__file__).parent / "pdfs"
 DATA_DIR.mkdir(exist_ok=True)
 
 client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+
+GITHUB_CLIENT_ID     = os.environ.get("GITHUB_CLIENT_ID", "")
+GITHUB_CLIENT_SECRET = os.environ.get("GITHUB_CLIENT_SECRET", "")
+FRONTEND_URL         = os.environ.get("FRONTEND_URL", "http://localhost:5173")
 
 MODEL = "claude-sonnet-4-6"
 
@@ -401,6 +407,20 @@ def changes(
 # GET /drugs
 # ---------------------------------------------------------------------------
 
+@app.get("/payers")
+def list_payers():
+    """Return unique payers as {name, slug} pairs from all saved policy files."""
+    payers: dict[str, str] = {}  # slug -> display name
+    for json_file in DATA_DIR.glob("*.json"):
+        try:
+            data = json.loads(json_file.read_text())
+            if name := data.get("payer"):
+                payers[slugify(name.strip())] = name.strip()
+        except Exception:
+            continue
+    return sorted([{"name": v, "slug": k} for k, v in payers.items()], key=lambda x: x["name"])
+
+
 @app.get("/drugs")
 def list_drugs():
     """Return unique drug names extracted from all saved policy files."""
@@ -424,6 +444,73 @@ def list_policies():
     """List all extracted policy JSON files in data/."""
     files = sorted([f.name for f in DATA_DIR.glob("*.json")])
     return {"files": files, "count": len(files)}
+
+
+# ---------------------------------------------------------------------------
+# GitHub OAuth
+# ---------------------------------------------------------------------------
+
+@app.get("/auth/github")
+def github_login():
+    if not GITHUB_CLIENT_ID:
+        raise HTTPException(400, "GITHUB_CLIENT_ID not configured in backend/.env")
+    callback = "http://localhost:8000/auth/github/callback"
+    url = (
+        f"https://github.com/login/oauth/authorize"
+        f"?client_id={GITHUB_CLIENT_ID}"
+        f"&redirect_uri={callback}"
+        f"&scope=user:email"
+    )
+    return RedirectResponse(url)
+
+
+@app.get("/auth/github/callback")
+async def github_callback(code: str):
+    if not GITHUB_CLIENT_ID or not GITHUB_CLIENT_SECRET:
+        raise HTTPException(400, "GitHub OAuth not configured")
+
+    async with httpx.AsyncClient() as http:
+        # Exchange code for access token
+        token_res = await http.post(
+            "https://github.com/login/oauth/access_token",
+            json={
+                "client_id": GITHUB_CLIENT_ID,
+                "client_secret": GITHUB_CLIENT_SECRET,
+                "code": code,
+            },
+            headers={"Accept": "application/json"},
+        )
+        token_data = token_res.json()
+        access_token = token_data.get("access_token")
+        if not access_token:
+            raise HTTPException(400, f"GitHub token exchange failed: {token_data}")
+
+        # Fetch user profile
+        user_res = await http.get(
+            "https://api.github.com/user",
+            headers={"Authorization": f"Bearer {access_token}", "Accept": "application/json"},
+        )
+        user = user_res.json()
+
+        # Fetch primary email if not public
+        email = user.get("email")
+        if not email:
+            emails_res = await http.get(
+                "https://api.github.com/user/emails",
+                headers={"Authorization": f"Bearer {access_token}", "Accept": "application/json"},
+            )
+            emails = emails_res.json()
+            primary = next((e for e in emails if e.get("primary")), None)
+            email = primary["email"] if primary else ""
+
+    user_payload = base64.urlsafe_b64encode(json.dumps({
+        "name":     user.get("name") or user.get("login"),
+        "email":    email,
+        "avatar":   user.get("avatar_url", ""),
+        "provider": "GitHub",
+    }).encode()).decode()
+
+    return RedirectResponse(f"{FRONTEND_URL}?auth={user_payload}")
 
 
 # ---------------------------------------------------------------------------

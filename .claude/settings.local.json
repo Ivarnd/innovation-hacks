@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:triageplus.vercel.app)",
+      "Bash(npm install:*)",
+      "Bash(pip show:*)",
+      "Bash(npx vite:*)"
+    ]
+  }
+}
