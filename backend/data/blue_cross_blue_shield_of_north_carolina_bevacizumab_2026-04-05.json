@@ -1,0 +1,37 @@
+{
+  "access_status": "Non-preferred; preferred alternatives are bevacizumab-awwb (Mvasi) and bevacizumab-bvzr (Zirabev)",
+  "prior_auth_criteria": "Restricted product requiring prior authorization. Must meet one of the following: (1) Patient currently stable on therapy for at least 180 days, OR patient treated within past 180 days and at risk if therapy changed; OR (2) FDA labeled indication met, including appropriate diagnostic testing if required, appropriate line of therapy, correct monotherapy or combination use, and performance status requirements met; OR (3) NCCN Category 1 or 2A supported indication with all requirements met. Additionally, as a non-preferred bevacizumab product, patient must have documented serious adverse event requiring medical intervention to BOTH preferred biosimilars (Mvasi and Zirabev) that is not anticipated with Avastin, AND prescriber must have completed and submitted an FDA MedWatch Adverse Event Reporting Form. Patient must not have experienced disease progression or unacceptable toxicity on same or same-class treatment. Age must be within FDA labeling or NCCN 1/2A recommendation. No FDA labeled contraindications. Dose and duration must be within FDA labeled or NCCN 1/2A supported dosing. Approval duration: 365 days.",
+  "drug_name": "bevacizumab",
+  "effective_date": "January 2026",
+  "covered_indications": [
+    "Metastatic colorectal cancer in combination with intravenous fluorouracil-based chemotherapy for first- or second-line treatment",
+    "Metastatic colorectal cancer in combination with fluoropyrimidine-irinotecan- or fluoropyrimidine-oxaliplatin-based chemotherapy for second-line treatment after progression on a first-line bevacizumab product-containing regimen (not for adjuvant treatment of colon cancer)",
+    "Unresectable, locally advanced, recurrent or metastatic non-squamous non-small cell lung cancer in combination with carboplatin and paclitaxel as first-line treatment",
+    "Recurrent glioblastoma in adults",
+    "Metastatic renal cell carcinoma in combination with interferon alfa",
+    "Persistent, recurrent, or metastatic cervical cancer in combination with paclitaxel and cisplatin, or paclitaxel and topotecan",
+    "Epithelial ovarian, fallopian tube, or primary peritoneal cancer: stage III or IV disease following initial surgical resection (with carboplatin and paclitaxel for up to 6 cycles, followed by single agent for total up to 22 cycles)",
+    "Epithelial ovarian, fallopian tube, or primary peritoneal cancer: platinum-resistant recurrent disease in patients who received no more than 2 prior chemotherapy regimens",
+    "Epithelial ovarian, fallopian tube, or primary peritoneal cancer: platinum-sensitive recurrent disease",
+    "Unresectable or metastatic hepatocellular carcinoma (HCC) in combination with atezolizumab in patients who have not received prior systemic therapy",
+    "Metastatic colorectal cancer in combination with IV fluorouracil-based chemotherapy for first- or second-line treatment",
+    "Metastatic colorectal cancer in combination with fluoropyrimidine-irinotecan- or fluoropyrimidine-oxaliplatin-based chemotherapy for second-line treatment after progression on a first-line bevacizumab product-containing regimen",
+    "Unresectable, locally advanced, recurrent or metastatic non-squamous non-small cell lung cancer in combination with carboplatin and paclitaxel as first-line",
+    "Stage III or IV epithelial ovarian, fallopian tube, or primary peritoneal cancer following initial surgical resection",
+    "Platinum-resistant recurrent epithelial ovarian, fallopian tube, or primary peritoneal cancer in patients who received no more than 2 prior chemotherapy regimens",
+    "Platinum-sensitive recurrent epithelial ovarian, fallopian tube, or primary peritoneal cancer"
+  ],
+  "step_therapy_required": true,
+  "step_therapy_drugs": [
+    "bevacizumab-awwb (Mvasi)",
+    "bevacizumab-bvzr (Zirabev)",
+    "bevacizumab (Avastin)"
+  ],
+  "site_of_care": "Intravenous infusion administered by a healthcare professional",
+  "payer": "Blue Cross Blue Shield of North Carolina",
+  "notes": "Avastin (bevacizumab) is a non-preferred, restricted product under the Preferred Injectable Oncology Program. Preferred (unrestricted) bevacizumab biosimilars are Mvasi (bevacizumab-awwb) and Zirabev (bevacizumab-bvzr). Authorization for Avastin requires documented serious adverse events to both preferred biosimilars plus FDA MedWatch Adverse Event Reporting Form submission. Limitation of use: not for adjuvant treatment of colon cancer. Off-label oncology use may be considered if supported by FDA label with established clinical benefit or NCCN Category 1 or 2A recommendation. Continuation criteria require continued clinical benefit, acceptable toxicity, and re-verification of adverse event documentation to preferred biosimilars.",
+  "prior_auth_required": true,
+  "quantity_limits": "HCPCS J9035, maximum units 9999. Dosing: Metastatic colorectal cancer: 5 mg/kg every 2 weeks with bolus-IFL; 10 mg/kg every 2 weeks with FOLFOX4; 5 mg/kg every 2 weeks or 7.5 mg/kg every 3 weeks with fluoropyrimidine-irinotecan- or fluoropyrimidine-oxaliplatin-based chemotherapy after progression. First-line NSCLC: 15 mg/kg every 3 weeks with carboplatin and paclitaxel. Recurrent glioblastoma: 10 mg/kg every 2 weeks. Metastatic RCC: 10 mg/kg every 2 weeks with interferon alfa. Cervical cancer: 15 mg/kg every 3 weeks with paclitaxel and cisplatin or paclitaxel and topotecan. Stage III/IV ovarian cancer post-surgical resection: 15 mg/kg every 3 weeks with carboplatin and paclitaxel for up to 6 cycles, then 15 mg/kg every 3 weeks as single agent, total up to 22 cycles. Platinum-resistant recurrent ovarian cancer: 10 mg/kg every 2 weeks with paclitaxel, pegylated liposomal doxorubicin, or weekly topotecan; or 15 mg/kg every 3 weeks with topotecan every 3 weeks. Platinum-sensitive recurrent ovarian cancer: 15 mg/kg every 3 weeks with carboplatin/paclitaxel for 6-8 cycles then single agent, or 15 mg/kg every 3 weeks with carboplatin/gemcitabine for 6-10 cycles then single agent. HCC: 15 mg/kg every 3 weeks following 1,200 mg atezolizumab.",
+  "brand_name": "Avastin",
+  "preferred_status": "non-preferred"
+}
