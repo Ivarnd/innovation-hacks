@@ -1,0 +1,7 @@
+ANTHROPIC_API_KEY=
+__pycache__/
+venv/
+*.pyc
+
+.env*
+
