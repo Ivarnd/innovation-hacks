@@ -296,32 +296,10 @@ def ask(body: AskRequest):
         "cache_control": {"type": "ephemeral"},
     })
 
-    # Attach raw PDFs for payers we have them for (with caching)
-    sources = []
-    for policy in matching_policies:
-        payer = (policy.get("payer") or "").lower()
-        pdf_file = None
-        for key, fname in PAYER_PDF_MAP.items():
-            if key in payer or payer in key:
-                pdf_file = PDFS_DIR / fname
-                break
-
-        if pdf_file and pdf_file.exists():
-            b64_pdf = base64.standard_b64encode(pdf_file.read_bytes()).decode("utf-8")
-            content_blocks.append({
-                "type": "document",
-                "source": {
-                    "type": "base64",
-                    "media_type": "application/pdf",
-                    "data": b64_pdf,
-                },
-                "cache_control": {"type": "ephemeral"},
-            })
-
-        sources.append({
-            "payer": policy.get("payer"),
-            "policy_date": policy.get("effective_date"),
-        })
+    sources = [
+        {"payer": p.get("payer"), "policy_date": p.get("effective_date"), "source_file": p.get("_source_file")}
+        for p in matching_policies
+    ]
 
     # The actual question (not cached — changes per request)
     content_blocks.append({
