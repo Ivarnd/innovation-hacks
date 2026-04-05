@@ -69,8 +69,8 @@ function CompareTab() {
   }
 
   const ROWS = [
-    { label: 'Drug (Generic)',     key: 'drug_name',            render: (v) => v || <span className="muted">—</span> },
-    { label: 'Brand Name',         key: 'brand_name',           render: (v) => v || <span className="muted">—</span> },
+    { label: 'Drug (Generic)',     key: 'drug_name',            render: (v) => v ? v.charAt(0).toUpperCase() + v.slice(1) : <span className="muted">—</span> },
+    { label: 'Brand Name',         key: 'brand_name',           render: (v) => v ? v.charAt(0).toUpperCase() + v.slice(1) : <span className="muted">—</span> },
     { label: 'Preferred Status',   key: 'preferred_status',     render: preferredBadge },
     { label: 'Access Status',      key: 'access_status',        render: listOrString },
     { label: 'Prior Auth',         key: 'prior_auth_required',  render: bool },
@@ -144,7 +144,9 @@ function CompareTab() {
                     {payers.map((p, i) => (
                       <th key={i}>
                         <div className="payer-name">{p.payer}</div>
-                        <div className="payer-category">{p._source_file}</div>
+                        <div className="payer-category">
+                          {p.effective_date || (p._source_file?.match(/(\d{4}-\d{2}-\d{2})/)?.[1]) || 'Latest'}
+                        </div>
                       </th>
                     ))}
                   </tr>
